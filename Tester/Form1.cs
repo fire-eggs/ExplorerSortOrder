@@ -7,18 +7,12 @@ namespace Tester
 {
     public partial class Form1 : Form
     {
-        // int __declspec(dllexport) find_sort(const wchar_t* path, int& cookie, int& ascend)
-        [DllImport("Dll1.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        public static extern int find_sort(string path, ref Int32 cookie, ref Int32 ascend);
-
-        [DllImport("Dll1.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+        [DllImport("ExplorerSortOrder.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         public static extern int take2(string path, ref StringBuilder str, int len, ref Int32 ascend);
 
         public Form1()
         {
             InitializeComponent();
-
-            //textBox1.Text = @"Y:\downloads\betty_boop";
         }
 
         private void getFolderSort(string path)
@@ -45,7 +39,6 @@ namespace Tester
 
         private void Panel1_DragEnter(object sender, DragEventArgs e)
         {
-            string filePath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
             e.Effect = DragDropEffects.Copy;
         }
 

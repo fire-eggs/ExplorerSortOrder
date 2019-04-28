@@ -22,8 +22,9 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{5683B330-A0C5-4978-BACA-CCF4F123396A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Dll1</RootNamespace>
+    <RootNamespace>ExplorerSortOrder</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>ExplorerSortOrder</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -100,7 +101,7 @@
       <AdditionalDependencies>propsys.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy E:\proj\ExplorerSort\AutomateShellWindow_demo\Automation\Dll1\Debug\dll1.dll E:\proj\ExplorerSort\AutomateShellWindow_demo\Automation\Tester</Command>
+      <Command>copy E:\proj\ExplorerSort\AutomateShellWindow_demo\Automation\Dll1\Debug\ExplorerSortOrder.dll E:\proj\ExplorerSort\AutomateShellWindow_demo\Automation\Tester</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
