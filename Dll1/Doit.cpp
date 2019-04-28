@@ -32,16 +32,10 @@ public:
 extern "C" {
 #endif
 
-int __declspec(dllexport) find_sort(const wchar_t* path, int& cookie, int& ascend)
-{
-	if (!path) return -1;
-	start();
-	return 0;
-}
-
 int __declspec(dllexport) take2(const wchar_t* path, wchar_t **str, int len, int& ascend)
 {
-	if (!path) return -1;
+	if (!path) 
+		return -1;
 	return findit(path, str, len, &ascend);
 }
 
@@ -167,8 +161,7 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 
 	for (int i = 0; i < cColumns; i++) 
 	{
-//		PCWSTR pszDir =
-		*ascend = rgColumns[0].direction > 0 ? 1 : 0; //L"ascending" : L"descending";
+		*ascend = rgColumns[0].direction > 0 ? 1 : 0;
 
 		PCWSTR pszName;
 		CComHeapPtr<WCHAR> spszName;
@@ -182,11 +175,10 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 			PSStringFromPropertyKey(rgColumns[0].propkey, szName, ARRAYSIZE(szName));
 			pszName = szName;
 		}
-		//printf("Column = %ls, direction = %ls\n", pszName, pszDir);
 	}
 }
 
-int start2(const wchar_t *target, wchar_t **store, int len, int*ascend)
+int findit(const wchar_t* target, wchar_t** store, int len, int* ascend)
 {
 	CCoInitialize init;
 	CComPtr<IShellWindows> spShellWindows;
@@ -203,14 +195,6 @@ int start2(const wchar_t *target, wchar_t **store, int len, int*ascend)
 
 	return 0;
 }
-
-
-
-int findit(const wchar_t* path, wchar_t** str, int len, int* ascend)
-{
-	return start2(path, str, len, ascend);
-}
-
 
 /*
 int test1()
