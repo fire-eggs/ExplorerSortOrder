@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * ExplorerSortOrder - Copyright © 2019 by Kevin Routley.
+ */
+
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -13,6 +17,8 @@ namespace Tester
         public Form1()
         {
             InitializeComponent();
+            btnSearch.Enabled = false;
+            lblPath.Text = lblResults.Text = "";
         }
 
         private void getFolderSort(string path)
@@ -23,15 +29,15 @@ namespace Tester
             int res = take2(path, ref sb, sb.Capacity, ref ascend);
             if (res == 0 && ascend >= 0)
             {
-                lblResults.Text = sb.ToString() + (ascend > 0 ? "(ascend)" : "(descend)");
+                lblResults.Text = sb.ToString() + (ascend > 0 ? " (ascending)" : " (descending)");
             }
             else
             {
-                lblResults.Text = "fail";
+                lblResults.Text = "Fail!";
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
             var path = textBox1.Text;
             getFolderSort(path);
@@ -57,6 +63,11 @@ namespace Tester
                 string folder = System.IO.Path.GetDirectoryName(args[1]);
                 getFolderSort(folder);
             }
+        }
+
+        private void TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            btnSearch.Enabled = !string.IsNullOrWhiteSpace(textBox1.Text);
         }
     }
 }
