@@ -155,7 +155,7 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 	CComHeapPtr<WCHAR> spszLocation;
 	if (FAILED(GetLocationFromView(spsb, &spszLocation))) return;
 
-	if (StrCmpW(spszLocation, target) != 0)
+	if (StrCmpIW(spszLocation, target) != 0)
 		return;
 
 	int cColumns;
