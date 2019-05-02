@@ -21,7 +21,7 @@ namespace Tester
             lblPath.Text = lblResults.Text = "";
         }
 
-        private void getFolderSort(string path)
+        private void GetFolderSort(string path)
         {
             lblPath.Text = path;
             int ascend = -1;
@@ -29,7 +29,7 @@ namespace Tester
             int res = take2(path, ref sb, sb.Capacity, ref ascend);
             if (res == 0 && ascend >= 0)
             {
-                lblResults.Text = sb.ToString() + (ascend > 0 ? " (ascending)" : " (descending)");
+                lblResults.Text = sb + (ascend > 0 ? " (ascending)" : " (descending)");
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Tester
         private void btnSearch_Click(object sender, EventArgs e)
         {
             var path = textBox1.Text;
-            getFolderSort(path);
+            GetFolderSort(path);
         }
 
         private void Panel1_DragEnter(object sender, DragEventArgs e)
@@ -52,7 +52,7 @@ namespace Tester
         {
             string filePath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
             string folder = System.IO.Path.GetDirectoryName(filePath);
-            getFolderSort(folder);
+            GetFolderSort(folder);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -61,7 +61,7 @@ namespace Tester
             if (args.Length >= 2)
             {
                 string folder = System.IO.Path.GetDirectoryName(args[1]);
-                getFolderSort(folder);
+                GetFolderSort(folder);
             }
         }
 

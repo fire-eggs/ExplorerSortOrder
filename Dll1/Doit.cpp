@@ -1,6 +1,10 @@
 /*
  * ExplorerSortOrder: This implementation is Copyright (C) 2019 by Kevin Routley.
  * Based on Raymond Chen's "The Old New Thing" blog entries.
+ * 
+ * Given a path to a target file/folder, determines the sort order of the Explorer
+ * Window containing the target. Returns the sort direction and the sort column
+ * as a string.
  */
 #include "pch.h"
 
@@ -14,15 +18,9 @@
 
 #include <shobjidl.h>
 #include <ShlGuid.h>
-//#include <shdispid.h>
 
 #include <intrin.h>
 #include <winerror.h>
-
-HRESULT GetLocationFromView(IShellBrowser* psb, PWSTR* ppszLocation);
-//void ProcessOneWindow(IUnknown* punk);
-//int start();
-int findit(const wchar_t* target, wchar_t** store, int len, int* ascend);
 
 // Raymond Chen: "The Old New Thing". Auto-cleanup of smart pointers.
 class CCoInitialize
@@ -33,40 +31,6 @@ public:
 	operator HRESULT() const { return m_hr; }
 	HRESULT m_hr;
 };
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int __declspec(dllexport) take2(const wchar_t* path, wchar_t **str, int len, int& ascend)
-{
-	if (!path) 
-		return -1;
-	return findit(path, str, len, &ascend);
-}
-
-#ifdef __cplusplus
-}
-#endif
-
-
-//int start()
-//{
-//	CCoInitialize init;
-//	CComPtr<IShellWindows> spShellWindows;
-//	spShellWindows.CoCreateInstance(CLSID_ShellWindows);
-//
-//	CComPtr<IUnknown> spunkEnum;
-//	spShellWindows->_NewEnum(&spunkEnum);
-//	CComQIPtr<IEnumVARIANT> spev(spunkEnum);
-//
-//	for (CComVariant svar; spev->Next(1, &svar, nullptr) == S_OK; svar.Clear())
-//	{
-//		ProcessOneWindow(svar.pdispVal);
-//	}
-//
-//	return 0;
-//}
 
 // Windows Explorer specific version: get the current location of the view
 HRESULT GetLocationFromView(IShellBrowser* psb, PWSTR* ppszLocation)
@@ -97,50 +61,6 @@ HRESULT GetLocationFromView(IShellBrowser* psb, PWSTR* ppszLocation)
 
 	return hr;
 }
-
-
-//void ProcessOneWindow(IUnknown* punk)
-//{
-//	CComPtr<IShellBrowser> spsb;
-//	if (FAILED(IUnknown_QueryService(punk, SID_STopLevelBrowser,
-//		IID_PPV_ARGS(&spsb)))) return;
-//
-//	CComPtr<IShellView> spsv;
-//	if (FAILED(spsb->QueryActiveShellView(&spsv))) return;
-//
-//	CComQIPtr<IFolderView2> spfv(spsv);
-//	if (!spfv) return;
-//
-//	CComHeapPtr<WCHAR> spszLocation;
-//	if (FAILED(GetLocationFromView(spsb, &spszLocation))) return;
-//
-//	printf("Location = %ls\n", static_cast<PCWSTR>(spszLocation));
-//
-//	int cColumns;
-//	if (FAILED(spfv->GetSortColumnCount(&cColumns))) return;
-//	if (cColumns > 10) cColumns = 10;
-//
-//	SORTCOLUMN rgColumns[10]; // arbitrary number
-//	spfv->GetSortColumns(rgColumns, cColumns);
-//
-//	for (int i = 0; i < cColumns; i++) {
-//		PCWSTR pszDir = rgColumns[0].direction > 0 ? L"ascending"
-//			: L"descending";
-//		PCWSTR pszName;
-//		CComHeapPtr<WCHAR> spszName;
-//		WCHAR szName[PKEYSTR_MAX];
-//		if (SUCCEEDED(PSGetNameFromPropertyKey(rgColumns[0].propkey,
-//			&spszName))) {
-//			pszName = spszName;
-//		}
-//		else {
-//			PSStringFromPropertyKey(rgColumns[0].propkey,
-//				szName, ARRAYSIZE(szName));
-//			pszName = szName;
-//		}
-//		printf("Column = %ls, direction = %ls\n", pszName, pszDir);
-//	}
-//}
 
 void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int len, int *ascend)
 {
@@ -195,8 +115,15 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 	}
 }
 
-int findit(const wchar_t* target, wchar_t** store, int len, int* ascend)
+// Declare the external function without C++ decoration
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int __declspec(dllexport) take2(const wchar_t* target, wchar_t** store, int len, int& ascend)
 {
+	if (!target) return E_INVALIDARG; // no target path
+
 	CCoInitialize init;
 	CComPtr<IShellWindows> spShellWindows;
 	const HRESULT hr = spShellWindows.CoCreateInstance(CLSID_ShellWindows);
@@ -209,10 +136,12 @@ int findit(const wchar_t* target, wchar_t** store, int len, int* ascend)
 	// Iterate thru all active Explorer windows to try to find the one with the target path
 	for (CComVariant svar; spev->Next(1, &svar, nullptr) == S_OK; svar.Clear())
 	{
-		ProcessOneWindow2(svar.pdispVal, target, store, len, ascend);
+		ProcessOneWindow2(svar.pdispVal, target, store, len, &ascend);
 	}
 
 	return SEVERITY_SUCCESS;
 }
 
-
+#ifdef __cplusplus
+}
+#endif
