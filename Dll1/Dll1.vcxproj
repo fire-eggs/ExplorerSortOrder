@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -101,7 +101,8 @@
       <AdditionalDependencies>propsys.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy E:\proj\ExplorerSort\AutomateShellWindow_demo\Automation\Dll1\Debug\ExplorerSortOrder.dll E:\proj\ExplorerSort\AutomateShellWindow_demo\Automation\Tester</Command>
+      <Command>copy $(TargetPath) $(SolutionDir)..\Tester
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
