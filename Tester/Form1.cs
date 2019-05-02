@@ -12,7 +12,7 @@ namespace Tester
     public partial class Form1 : Form
     {
         [DllImport("ExplorerSortOrder.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        public static extern int take2(string path, ref StringBuilder str, int len, ref Int32 ascend);
+        public static extern int GetExplorerSortOrder(string path, ref StringBuilder str, int len, ref Int32 ascend);
 
         public Form1()
         {
@@ -26,7 +26,7 @@ namespace Tester
             lblPath.Text = path;
             int ascend = -1;
             StringBuilder sb = new StringBuilder(200);
-            int res = take2(path, ref sb, sb.Capacity, ref ascend);
+            int res = GetExplorerSortOrder(path, ref sb, sb.Capacity, ref ascend);
             if (res == 0 && ascend >= 0)
             {
                 lblResults.Text = sb + (ascend > 0 ? " (ascending)" : " (descending)");

@@ -120,7 +120,7 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 extern "C" {
 #endif
 
-int __declspec(dllexport) take2(const wchar_t* target, wchar_t** store, int len, int& ascend)
+int __declspec(dllexport) GetExplorerSortOrder(const wchar_t* target, wchar_t** store, int len, int& ascend)
 {
 	if (!target) return E_INVALIDARG; // no target path
 
