@@ -21,6 +21,7 @@
 
 #include <intrin.h>
 #include <winerror.h>
+#include <strsafe.h>
 
 // Raymond Chen: "The Old New Thing". Auto-cleanup of smart pointers.
 class CCoInitialize
@@ -92,7 +93,7 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 	SORTCOLUMN rgColumns[10]; // arbitrary number
 	spfv->GetSortColumns(rgColumns, cColumns);
 
-	// TODO: how can explorer be sorted on more than one column?
+	// TODO: explorer can be sorted on more than one column using Shift+Click
 	// TODO: this returns the LAST sort column
 	for (int i = 0; i < cColumns; i++) 
 	{
@@ -100,17 +101,17 @@ void ProcessOneWindow2(IUnknown* punk, const WCHAR *target, WCHAR **store, int l
 		*ascend = rgColumns[0].direction > 0 ? 1 : 0;
 
 		// Sort column as a string
-		PCWSTR pszName;
 		CComHeapPtr<WCHAR> spszName;
 		WCHAR szName[PKEYSTR_MAX];
-		if (SUCCEEDED(PSGetNameFromPropertyKey(rgColumns[0].propkey, store))) 
+		if (SUCCEEDED(PSGetNameFromPropertyKey(rgColumns[0].propkey, &spszName))) 
 		{
-			pszName = spszName;
+			StringCbCopyNW(*store, len, spszName, len);
 		}
 		else 
 		{
+			// TODO when/how do we hit this path?
 			PSStringFromPropertyKey(rgColumns[0].propkey, szName, ARRAYSIZE(szName));
-			pszName = szName;
+			StringCbCopyNW(*store, len, szName, len);
 		}
 	}
 }
@@ -134,11 +135,14 @@ int __declspec(dllexport) GetExplorerSortOrder(const wchar_t* target, wchar_t** 
 	CComQIPtr<IEnumVARIANT> spev(spunkEnum);
 
 	// Iterate thru all active Explorer windows to try to find the one with the target path
+	ascend = -1;
 	for (CComVariant svar; spev->Next(1, &svar, nullptr) == S_OK; svar.Clear())
 	{
 		ProcessOneWindow2(svar.pdispVal, target, store, len, &ascend);
 	}
 
+	if (ascend < 0)
+		return E_FAIL;
 	return SEVERITY_SUCCESS;
 }
 
