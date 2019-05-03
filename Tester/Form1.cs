@@ -21,13 +21,15 @@ namespace Tester
             lblPath.Text = lblResults.Text = "";
         }
 
-        private void GetFolderSort(string path)
+        private void GetFolderSort(string fullpath)
         {
+            lblInput.Text = fullpath;
+            string path = System.IO.Path.GetDirectoryName(fullpath);
             lblPath.Text = path;
             int ascend = -1;
             StringBuilder sb = new StringBuilder(200);
             int res = GetExplorerSortOrder(path, ref sb, sb.Capacity, ref ascend);
-            if (res == 0 && ascend >= 0)
+            if (res == 0)
             {
                 lblResults.Text = sb + (ascend > 0 ? " (ascending)" : " (descending)");
             }
@@ -51,8 +53,7 @@ namespace Tester
         private void Panel1_DragDrop(object sender, DragEventArgs e)
         {
             string filePath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
-            string folder = System.IO.Path.GetDirectoryName(filePath);
-            GetFolderSort(folder);
+            GetFolderSort(filePath);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -60,8 +61,7 @@ namespace Tester
             var args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
             {
-                string folder = System.IO.Path.GetDirectoryName(args[1]);
-                GetFolderSort(folder);
+                GetFolderSort(args[1]);
             }
         }
 
