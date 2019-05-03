@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dll1", "Dll1.vcxproj", "{5683B330-A0C5-4978-BACA-CCF4F123396A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExplorerSortOrder", "Dll1.vcxproj", "{5683B330-A0C5-4978-BACA-CCF4F123396A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "..\Tester\Tester.csproj", "{CF9B3B00-FA17-4B1D-8FA3-50BECD3D48C9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5683B330-A0C5-4978-BACA-CCF4F123396A} = {5683B330-A0C5-4978-BACA-CCF4F123396A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
